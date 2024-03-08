@@ -1,14 +1,14 @@
 ﻿@model music_store.Models.Artist
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Slet";
 }
 
-<h1>Delete</h1>
+<h1>Slet</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Er du sikker på du vil slette denne?</h3>
 <div>
-    <h4>Artist</h4>
+    <h4>Kunstner</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -21,7 +21,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ArtistId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Slet" class="btn btn-danger" /> |
+        <a asp-action="Index">Tilbage til listen</a>
     </form>
 </div>

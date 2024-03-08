@@ -22,7 +22,9 @@ namespace music_store.Controllers
         // GET: Album
         public async Task<IActionResult> Index()
         {
-            var music_storeContext = _context.Album.Include(a => a.Artist).Include(a => a.Genre);
+            var music_storeContext = _context.Album
+                .Include(a => a.Artist)
+                .Include(a => a.Genre);
             return View(await music_storeContext.ToListAsync());
         }
 
@@ -46,11 +48,20 @@ namespace music_store.Controllers
             return View(album);
         }
 
+        public async Task<IActionResult> AlbumSongs()
+        {
+            var album = await _context.Album
+                .Include(a => a.Songs)
+                .ToListAsync();
+
+            return View(album);
+        }
+
         // GET: Album/Create
         public IActionResult Create()
         {
-            ViewData["ArtistId"] = new SelectList(_context.Artist, "ArtistId", "ArtistId");
-            ViewData["GenreId"] = new SelectList(_context.Set<Genre>(), "GenreId", "GenreId");
+            ViewData["ArtistId"] = new SelectList(_context.Artist, "ArtistId", "Name");
+            ViewData["GenreId"] = new SelectList(_context.Genre, "GenreId", "Name");
             return View();
         }
 
@@ -85,8 +96,8 @@ namespace music_store.Controllers
             {
                 return NotFound();
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artist, "ArtistId", "ArtistId", album.ArtistId);
-            ViewData["GenreId"] = new SelectList(_context.Set<Genre>(), "GenreId", "GenreId", album.GenreId);
+            ViewData["ArtistId"] = new SelectList(_context.Artist, "ArtistId", "Name", album.ArtistId);
+            ViewData["GenreId"] = new SelectList(_context.Set<Genre>(), "GenreId", "Name", album.GenreId);
             return View(album);
         }
 

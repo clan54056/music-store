@@ -1,0 +1,53 @@
+﻿@model IEnumerable<music_store.Models.Album>
+
+@{
+    ViewData["Title"] = "Alle Albums";
+}
+
+<h1>Alle Albums</h1>
+
+<p>
+    <a asp-action="Create">Opret Nyt</a>
+</p>
+<p>
+    <a asp-controller="Album" asp-action="Index">Vis albums</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Album</th>
+            <th>Sange</th>
+            <th>Slet</th>
+            <th>Tilføj</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var album in Model)
+        {
+            <tr>
+                <td>@album.Title</td>
+                <td>
+                    <ul>
+                        @foreach (var song in album.Songs)
+                        {
+                            <li>@song.Title</li>
+                        }
+                    </ul>
+                </td>
+                <td>
+                    @foreach (var song in album.Songs)
+                    {
+                        <li>
+                            <a asp-controller="Song" asp-action="Delete" asp-route-id="@song.SongId">Slet Sang</a>
+                        </li>
+                    }
+                </td>
+                <td>
+                    <a asp-controller="Song" asp-action="Create" asp-route-albumId="@album.AlbumId">Tilføj Sang</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

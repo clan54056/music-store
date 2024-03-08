@@ -23,8 +23,11 @@ namespace music_store.Controllers
         public async Task<IActionResult> Index()
         {
             return _context.Song != null ?
-                        View(await _context.Song.ToListAsync()) :
-                        Problem("Entity set 'music_storeContext.Song'  is null.");
+                View(await _context.Song
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .ToListAsync()) :
+                Problem("Entity set 'music_storeContext.Song'  is null.");
         }
 
         // GET: Song/Details/5
@@ -36,6 +39,8 @@ namespace music_store.Controllers
             }
 
             var song = await _context.Song
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
                 .FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
             {
@@ -46,8 +51,10 @@ namespace music_store.Controllers
         }
 
         // GET: Song/Create
-        public IActionResult Create()
+        public IActionResult Create(int? AlbumId)
         {
+            ViewData["ArtistId"] = new SelectList(_context.Artist, "ArtistId", "Name");
+            ViewData["AlbumId"] = new SelectList(_context.Album, "AlbumId", "Title");
             return View();
         }
 
@@ -56,7 +63,7 @@ namespace music_store.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SongId,ArtistId,ArtistName,Title,Duration")] Song song)
+        public async Task<IActionResult> Create([Bind("SongId,ArtistId,AlbumId,Title,Duration")] Song song)
         {
             if (ModelState.IsValid)
             {
@@ -75,11 +82,13 @@ namespace music_store.Controllers
                 return NotFound();
             }
 
-            var song = await _context.Song.FindAsync(id);
+            var song = await _context.Song.FirstOrDefaultAsync(m => m.SongId == id);
             if (song == null)
             {
                 return NotFound();
             }
+            ViewData["ArtistId"] = new SelectList(_context.Artist, "ArtistId", "Name");
+            ViewData["AlbumId"] = new SelectList(_context.Set<Album>(), "AlbumId", "Title");
             return View(song);
         }
 
@@ -88,7 +97,7 @@ namespace music_store.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SongId,ArtistId,ArtistName,Title,Duration")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("SongId,ArtistId,AlbumId,Title,Duration")] Song song)
         {
             if (id != song.SongId)
             {
@@ -97,6 +106,7 @@ namespace music_store.Controllers
 
             if (ModelState.IsValid)
             {
+
                 try
                 {
                     _context.Update(song);
@@ -127,7 +137,9 @@ namespace music_store.Controllers
             }
 
             var song = await _context.Song
+                .Include(s => s.Artist)
                 .FirstOrDefaultAsync(m => m.SongId == id);
+
             if (song == null)
             {
                 return NotFound();
@@ -145,7 +157,9 @@ namespace music_store.Controllers
             {
                 return Problem("Entity set 'music_storeContext.Song'  is null.");
             }
-            var song = await _context.Song.FindAsync(id);
+            var song = await _context.Song
+                .FirstOrDefaultAsync(m => m.SongId == id);
+
             if (song != null)
             {
                 _context.Song.Remove(song);

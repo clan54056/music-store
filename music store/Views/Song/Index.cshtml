@@ -1,25 +1,25 @@
 ﻿@model IEnumerable<music_store.Models.Song>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Sang";
 }
 
-<h1>Index</h1>
+<h1>Sang</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Opret Ny</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ArtistId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArtistName)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Artist)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Album)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Duration)
@@ -28,26 +28,27 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArtistId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArtistName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Duration)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SongId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SongId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SongId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Artist.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Album.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FormattedDuration)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.SongId">Opdater</a> |
+                    <a asp-action="Details" asp-route-id="@item.SongId">Detaljer</a> |
+                    <a asp-action="Delete" asp-route-id="@item.SongId">Slet</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
